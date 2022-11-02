@@ -16,7 +16,7 @@ mongoose
         }
     )
     .then(() => console.log("MongoDb is Connected"))
-    .catch((err) => console.log((err)));
+    .catch((err) => console.log(chalk.red(err)));
 
 app.use("/", route);
 
@@ -25,5 +25,5 @@ app.use("/", route);
 // });
 
 app.listen(PORT, () => {
-    console.log(`server started on port ` + PORT);
+    console.log(`server started on port ${PORT}`);
 });
