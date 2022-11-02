@@ -39,7 +39,7 @@ router.post(
     productController.createProduct
 );
 
-router.get("/h", productController.getProductbyQueryParams);
+router.get("/products", productController.getProductbyQueryParams);
 
 router.get("/products/:productId", productController.getProductbyParams);
 
