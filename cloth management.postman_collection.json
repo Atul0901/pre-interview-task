@@ -1,0 +1,584 @@
+{
+	"info": {
+		"_postman_id": "83484c31-a67c-4648-a771-41aa53feed8a",
+		"name": "cloth management",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21213517"
+	},
+	"item": [
+		{
+			"name": "User APIs",
+			"item": [
+				{
+					"name": "User registration",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"pm.test(\"User registration has a correctsuccessful response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.status).to.eql(true);",
+									"    pm.expect(jsonData.data).exist;",
+									"    pm.expect(jsonData.data.profileImage).exist;",
+									"    pm.expect(jsonData.data.profileImage).exist;",
+									"});",
+									"",
+									"pm.collectionVariables.set(\"user_id\", pm.response.json().data._id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "fname",
+									"value": "Bat",
+									"type": "default"
+								},
+								{
+									"key": "lname",
+									"value": "Man",
+									"type": "default"
+								},
+								{
+									"key": "email",
+									"value": "batman45@gmail.com",
+									"type": "default"
+								},
+								{
+									"key": "phone",
+									"value": "+91 9091919192",
+									"type": "default"
+								},
+								{
+									"key": "password",
+									"value": "Hoh@4oheehee",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:3000/register",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 or 201\", function () {",
+									"    try {",
+									"        pm.response.to.have.status(201);",
+									"    } catch (e) {",
+									"        pm.response.to.have.status(200);",
+									"    }",
+									"});",
+									"pm.test(\"User login has a correct successful response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.status).to.eql(true);",
+									"    pm.expect(jsonData.data).exist;",
+									"});",
+									"",
+									"pm.collectionVariables.set(\"user_token\", pm.response.json().data.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"batman45@gmail.com\",\n    \"password\":\"Hoh@4oheehee\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/login",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User profile",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Fetch user details is successful\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.status).to.eql(true);",
+									"    pm.expect(jsonData.message).exist;",
+									"    pm.expect(jsonData.data).exist;",
+									"    ",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{user_token}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "localhost:3000/user/{{user_id}}/profile",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"user",
+								"{{user_id}}",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User profile",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Update user profile is successful\", function () {",
+									"    let jsonData = pm.response.json();",
+									"    pm.expect(jsonData.status).to.eql(true);",
+									"    pm.expect(jsonData.message).exist;",
+									"    pm.expect(jsonData.data).exist;",
+									"    let new_address = JSON.parse(pm.request.body.formdata.toObject(true).address)",
+									"    let expected_pincode = new_address.pincode",
+									"    let expected_street = new_address.street",
+									"    let expected_city = new_address.city",
+									"",
+									"    let actual_pincode = jsonData.data.address.pincode",
+									"    let actual_street = jsonData.data.address.street",
+									"    let actual_city = jsonData.data.address.city",
+									"    pm.expect(actual_pincode).to.eql(expected_pincode)",
+									"    pm.expect(actual_street).to.eql(expected_street)",
+									"    pm.expect(actual_city).to.eql(expected_city)",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{user_token}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "address",
+									"value": "{\"shipping\":{\"street\":\"21 BakerSt.\",\"city\":\"Gowtham\",\"pincode\":\"110117\"},\"billing\":{\"street\":\"21 BakerSt.\",\"city\":\"Gowtham\",\"pincode\":\"110112\"}}",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:3000/user/{{user_id}}/profile",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"user",
+								"{{user_id}}",
+								"profile"
+							]
+						},
+						"description": "This request updates the following in user details:\n - Shipping street\n - Shipping city \n - Shipping pincode"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Product APIs",
+			"item": [
+				{
+					"name": "Create product (item 1)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"pm.test(\"Product creation has a successful response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.status).to.eql(true);",
+									"    pm.expect(jsonData.message).to.eql(\"Success\");",
+									"    pm.expect(jsonData.data).exist;",
+									"    pm.expect(jsonData.data.productImage).exist;",
+									"",
+									"});",
+									"",
+									"pm.collectionVariables.set(\"product_id1\", pm.response.json().data._id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "Very Cool Baseball Cap",
+									"type": "default"
+								},
+								{
+									"key": "description",
+									"value": "Blue baseball cap. Will protect your skull from heat, bullets and punches.",
+									"type": "default"
+								},
+								{
+									"key": "price",
+									"value": "100",
+									"type": "default"
+								},
+								{
+									"key": "currencyId",
+									"value": "INR",
+									"type": "default"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/Users/sabihakhan/Downloads/cap-blue.jpeg"
+								},
+								{
+									"key": "style",
+									"value": "baseball",
+									"type": "default"
+								},
+								{
+									"key": "availableSizes",
+									"value": "XS",
+									"type": "default"
+								},
+								{
+									"key": "installments",
+									"value": "4",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:3000/products",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Product details",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Get Product details has a successful response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.status).to.eql(true);",
+									"    pm.expect(jsonData.message).to.eql(\"Success\");",
+									"    pm.expect(jsonData.data).exist;",
+									"    pm.expect(jsonData.data.productImage).exist;",
+									"    pm.expect(jsonData.data.isDeleted).exist;",
+									"    pm.expect(jsonData.data.currencyFormat).exist;",
+									"    pm.expect(jsonData.data.isFreeShipping).exist;",
+									"",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/products/{{product_id1}}",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"products",
+								"{{product_id1}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All products",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Getch all Products has a successful response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.status).to.eql(true);",
+									"    pm.expect(jsonData.message).to.eql(\"Success\");",
+									"    pm.expect(jsonData.data).exist;",
+									"    pm.expect(jsonData.data).to.be.an('array')",
+									"    ",
+									"",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/products",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update a product",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Update product details is successful\", function () {",
+									"    let jsonData = pm.response.json();",
+									"    pm.expect(jsonData.status).to.eql(true);",
+									"    pm.expect(jsonData.message).exist;",
+									"    pm.expect(jsonData.data).exist;",
+									"    let request = pm.request.body.formdata.toObject(true)",
+									"    let expected_description = request.description",
+									"    let expected_price = Number(request.price)",
+									"    let expected_isFreeShipping = Boolean(request.isFreeShipping)",
+									"",
+									"    let actual_description = jsonData.data.description",
+									"    let actual_price = jsonData.data.price",
+									"    let actual_isFreeShipping = jsonData.data.isFreeShipping",
+									"    pm.expect(actual_description).to.eql(expected_description)",
+									"    pm.expect(actual_price).to.eql(expected_price)",
+									"    pm.expect(actual_isFreeShipping).to.eql(expected_isFreeShipping)",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "description",
+									"value": "Pretty awesome cap",
+									"type": "default"
+								},
+								{
+									"key": "price",
+									"value": "150",
+									"type": "default"
+								},
+								{
+									"key": "isFreeShipping",
+									"value": "true",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:3000/products/{{product_id1}}",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"products",
+								"{{product_id1}}"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						},
+						"description": "This request updates the following in product details:\n - description\n - price\n - isFreeShipping"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a product",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Product deletion is successful\", function () {",
+									"    let jsonData = pm.response.json();",
+									"    pm.expect(jsonData.status).to.eql(true);",
+									"    pm.expect(jsonData.message).exist;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/products/{{product_id1}}",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"products",
+								"{{product_id1}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "user_token",
+			"value": ""
+		},
+		{
+			"key": "user_id",
+			"value": ""
+		},
+		{
+			"key": "product_id",
+			"value": ""
+		},
+		{
+			"key": "cart_id",
+			"value": ""
+		},
+		{
+			"key": "product_id1",
+			"value": ""
+		},
+		{
+			"key": "product_id2",
+			"value": ""
+		},
+		{
+			"key": "total_price",
+			"value": ""
+		},
+		{
+			"key": "item1_price",
+			"value": ""
+		},
+		{
+			"key": "item2_price",
+			"value": ""
+		},
+		{
+			"key": "order_id",
+			"value": ""
+		}
+	]
+}

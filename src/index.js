@@ -3,7 +3,7 @@ const route = require("./routes/route.js");
 const mongoose = require("mongoose");
 const app = express();
 const multer = require("multer");
-const PORT = process.env.PORT || 3030;
+const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(multer().any())
