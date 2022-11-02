@@ -1,9 +1,9 @@
 const express = require("express");
 const route = require("./routes/route.js");
 const mongoose = require("mongoose");
-const chalk = require('chalk');
 const app = express();
 const multer = require("multer");
+const PORT = process.env.PORT || 3030;
 
 app.use(express.json());
 app.use(multer().any());
@@ -15,11 +15,15 @@ mongoose
             useNewUrlParser: true,
         }
     )
-    .then(() => console.log(chalk.blue("MongoDb is Connected")))
-    .catch((err) => console.log(chalk.red(err)));
+    .then(() => console.log("MongoDb is Connected"))
+    .catch((err) => console.log((err)));
 
 app.use("/", route);
 
-app.listen(process.env.PORT || 3000, function () {
-    console.log(chalk.blue("Express app running on port " + (process.env.PORT || 3000)));
+// app.listen(process.env.PORT || 3000, function () {
+//     console.log(chalk.blue("Express app running on port " PORT);
+// });
+
+app.listen(PORT, () => {
+    console.log(`server started on port ${PORT}`);
 });
