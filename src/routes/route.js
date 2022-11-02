@@ -39,7 +39,7 @@ router.post(
     productController.createProduct
 );
 
-router.get("/products", productController.getProductbyQueryParams);
+router.get("/h", productController.getProductbyQueryParams);
 
 router.get("/products/:productId", productController.getProductbyParams);
 
@@ -51,6 +51,9 @@ router.put(
 
 router.delete("/products/:productId", productController.deleteProduct);
 
+router.get('/test-you', function(req, res){
+    res.send('This is the second routes implementation')
+})
 
 router.all("/**", function (req, res) {
     res.status(404).send({
